@@ -1933,166 +1933,218 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 /* ==========================================================================
-   SIDEBAR BACKDROP (mobile overlay)
+   MOBILE HEADER  — hidden on desktop, fixed top bar on mobile
    ========================================================================== */
+.mobile-header {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+.mobile-menu-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px; height: 36px;
+    border: 1px solid var(--border-color);
+    background: rgba(255,255,255,0.05);
+    border-radius: 9px;
+    color: var(--text-primary);
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.15s;
+}
+.mobile-menu-btn:hover { background: rgba(255,255,255,0.1); }
+.mobile-menu-btn i { width: 18px; height: 18px; }
+.mobile-logo-wrap {
+    display: flex; align-items: center; gap: 8px; flex: 1; justify-content: center;
+}
+.mobile-logo-text {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700; font-size: 16px;
+    color: var(--text-primary); letter-spacing: -0.3px;
+}
+.khayal-k { width: 20px; height: 20px; }
+
+/* Sidebar backdrop — always in DOM, shown via body class */
 .sidebar-backdrop {
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.65);
-    z-index: 299;
-    backdrop-filter: blur(2px);
-    -webkit-backdrop-filter: blur(2px);
-}
-.sidebar-backdrop.visible { display: block; }
-
-/* ==========================================================================
-   TABLET  (≤ 1100px)
-   ========================================================================== */
-@media (max-width: 1100px) {
-    .kpi-container { max-width: 100%; }
-    .main-content  { padding: 24px 20px 40px; }
+    background: rgba(0,0,0,0.65);
+    z-index: 350;
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
 }
 
 /* ==========================================================================
-   MOBILE  (≤ 768px)
+   MOBILE  (≤ 768px) — full layout reflow
    ========================================================================== */
 @media (max-width: 768px) {
 
-    /* Sidebar: fixed overlay, slides from left */
+    /* Prevent horizontal overflow */
+    html, body { overflow-x: hidden; max-width: 100vw; }
+
+    /* ── Mobile header ── */
+    .mobile-header {
+        display: flex;
+        position: fixed;
+        top: 0; left: 0; right: 0;
+        height: 54px;
+        z-index: 300;
+        background: var(--bg-sidebar);
+        border-bottom: 1px solid var(--border-color);
+        padding: 0 14px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.35);
+    }
+
+    /* ── Sidebar: fixed left drawer, always off-screen until body class set ── */
     .sidebar {
         position: fixed !important;
-        left: 0 !important;
-        top: 0 !important;
+        top: 0 !important; left: 0 !important;
         height: 100dvh !important;
-        z-index: 300;
-        width: 270px !important;
-        padding: 20px 14px !important;
+        width: 275px !important;
+        z-index: 400;
+        overflow-y: auto !important; overflow-x: hidden !important;
+        padding: 20px 16px !important;
+        border-right: 1px solid var(--border-color) !important;
         border-color: var(--border-color) !important;
-        box-shadow: 6px 0 32px rgba(0, 0, 0, 0.6);
-        transform: translateX(0) !important;
-        transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1) !important;
-        overflow-y: auto;
-    }
-    .sidebar.collapsed {
+        box-shadow: 8px 0 40px rgba(0,0,0,0.7);
+        /* Force transform-based slide — override desktop width transition */
         transform: translateX(-100%) !important;
-        /* keep width/padding so animation is smooth */
-        width: 270px !important;
-        padding: 20px 14px !important;
+        transition: transform 0.3s cubic-bezier(0.4,0,0.2,1) !important;
+    }
+
+    /* .collapsed on desktop shrinks width to 0 — neutralise that on mobile */
+    .sidebar.collapsed {
+        width: 275px !important;
+        padding: 20px 16px !important;
         border-color: var(--border-color) !important;
+        transform: translateX(-100%) !important;
     }
 
-    /* Hamburger always visible on mobile */
-    .sidebar-show-btn {
-        display: flex !important;
-        top: 14px;
-        left: 14px;
+    /* Body class opens the drawer */
+    body.mob-sidebar-open .sidebar,
+    body.mob-sidebar-open .sidebar.collapsed {
+        transform: translateX(0) !important;
     }
 
-    /* App shell: block so main fills 100% */
-    .app-container { display: block; }
+    /* Backdrop — shown via body class */
+    body.mob-sidebar-open .sidebar-backdrop { display: block; }
 
+    /* Hide desktop toggle controls */
+    .sidebar-toggle-btn { display: none !important; }
+    .sidebar-show-btn   { display: none !important; }
+
+    /* ── App shell: single-column, sidebar out of flow ── */
+    .app-container {
+        display: block !important;
+        min-height: 100dvh;
+    }
+
+    /* ── Main content ── */
     .main-content {
-        width: 100%;
-        padding: 60px 14px 40px;
+        width: 100% !important;
+        max-width: 100vw !important;
+        min-width: 0 !important;
+        padding: 66px 14px 48px 14px !important;
+        overflow-x: hidden;
     }
 
-    /* Header */
+    /* ── Dashboard header ── */
     .dashboard-header {
         flex-direction: column;
         align-items: flex-start;
-        gap: 10px;
+        gap: 8px;
         margin-bottom: 14px;
     }
-    .header-welcome h1 { font-size: 17px; }
+    .header-welcome h1 { font-size: 16px; }
     .header-welcome p  { font-size: 11px; }
     .backup-actions    { flex-wrap: wrap; gap: 6px; }
     .backup-actions .btn span { display: none; }
 
-    /* Controls */
+    /* ── Controls row ── */
     .controls-row {
         flex-direction: column;
         align-items: stretch;
-        gap: 10px;
+        gap: 8px;
         margin-bottom: 14px;
     }
-    .search-and-filters { flex-direction: column; align-items: stretch; gap: 8px; }
-    .search-wrapper { width: 100%; }
+    .search-and-filters { flex-direction: column; gap: 8px; }
+    .search-wrapper,
     .filter-wrapper { width: 100%; }
-    .main-actions   { flex-wrap: wrap; gap: 6px; }
+    .main-actions { flex-wrap: wrap; gap: 6px; }
     .show-archived-toggle span { display: none; }
 
-    /* Column summary: horizontal scroll strip */
+    /* ── Column summary strip: horizontal scroll ── */
     .column-summary-container {
         flex-wrap: nowrap;
         overflow-x: auto;
-        padding-bottom: 4px;
         gap: 6px;
+        padding-bottom: 6px;
         -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
     }
+    .column-summary-container::-webkit-scrollbar { display: none; }
     .column-summary-tile { flex-shrink: 0; }
 
-    /* KPI: 2 columns, compact */
+    /* ── KPI grid: 2 × 2 ── */
     .kpi-container {
         grid-template-columns: repeat(2, 1fr);
         max-width: 100%;
         gap: 8px;
-        margin-bottom: 14px;
+        margin-bottom: 16px;
     }
+    .kpi-card   { padding: 10px 12px; }
     .kpi-value  { font-size: 15px; }
     .kpi-label  { font-size: 9px; }
-    .kpi-card   { padding: 10px 12px; }
 
-    /* Kanban: single-column stack */
+    /* ── Kanban board: vertical stack ── */
     .kanban-board { flex-direction: column; gap: 10px; }
     .kanban-column {
         flex: none !important;
         width: 100% !important;
         min-width: 0 !important;
     }
-    .column-body { max-height: 340px; }
-
-    /* Cards: no lift on touch */
-    .project-card:hover { transform: none; box-shadow: none; }
-    /* Edit btn always visible on mobile (no hover) */
+    .column-body { max-height: 320px; }
+    .project-card:hover { transform: none; }
     .card-edit-btn { opacity: 1; }
 
-    /* Sub-board header: stack */
+    /* ── Sub-board header ── */
     .sub-board-header { flex-direction: column; align-items: flex-start; gap: 10px; }
     .sub-board-header-left  { flex-wrap: wrap; gap: 8px; }
     .sub-board-header-right { flex-wrap: wrap; gap: 6px; }
-    .sub-board-project-info h2 { font-size: 15px; }
+    .sub-board-project-info h2 { font-size: 14px; }
+    .sub-board-header-right .btn span { display: none; }
 
-    /* Modals: bottom sheet */
-    .modal-overlay {
-        align-items: flex-end;
-        padding: 0;
-    }
+    /* ── Modals: bottom sheet ── */
+    .modal-overlay { align-items: flex-end; padding: 0; }
     .modal-card {
         width: 100% !important;
         max-width: 100% !important;
-        max-height: 92dvh;
+        max-height: 90dvh;
         overflow-y: auto;
-        border-radius: 18px 18px 0 0 !important;
+        border-radius: 20px 20px 0 0 !important;
         margin: 0 !important;
     }
     .modal-card-small {
         width: 100% !important;
         max-width: 100% !important;
-        border-radius: 18px 18px 0 0 !important;
+        border-radius: 20px 20px 0 0 !important;
+        margin: 0 !important;
     }
     .form-row   { grid-template-columns: 1fr 1fr; gap: 8px; }
     .form-row-4 { grid-template-columns: 1fr 1fr; gap: 8px; }
 
-    /* Calendar: compact */
-    .calendar-section   { padding: 14px 10px 16px; }
-    .calendar-top-row   { margin-bottom: 12px; }
-    .cal-grid           { gap: 2px; }
-    .cal-day            { min-height: 58px; padding: 4px 3px; }
-    .cal-day-header     { font-size: 8px; padding-bottom: 5px; }
-    .cal-day-num        { font-size: 9.5px; }
-    .cal-label          { font-size: 7.5px; padding: 1px 3px; }
-    .calendar-month-label { min-width: 90px; font-size: 11px; }
+    /* ── Calendar: compact ── */
+    .calendar-section { padding: 12px 8px 16px; }
+    .calendar-top-row { gap: 8px; flex-wrap: wrap; }
+    .cal-grid  { gap: 2px; }
+    .cal-day   { min-height: 56px; padding: 3px 2px; }
+    .cal-day-header  { font-size: 8px; padding-bottom: 4px; }
+    .cal-day-num     { font-size: 9px; }
+    .cal-label       { font-size: 7px; padding: 1px 3px; }
+    .calendar-month-label { font-size: 11px; min-width: 80px; }
     .calendar-section-title span { font-size: 12px; }
 }
 
@@ -2100,26 +2152,24 @@ input[type="date"]::-webkit-calendar-picker-indicator {
    SMALL PHONES  (≤ 480px)
    ========================================================================== */
 @media (max-width: 480px) {
-    .main-content { padding: 56px 10px 32px; }
 
-    .kpi-card   { padding: 9px 10px; }
-    .kpi-value  { font-size: 14px; }
+    .main-content { padding: 60px 10px 40px 10px !important; }
 
     .form-row, .form-row-4 { grid-template-columns: 1fr; }
 
-    /* Calendar: dot indicators only (text too cramped) */
+    .kpi-card  { padding: 9px 10px; }
+    .kpi-value { font-size: 14px; }
+
+    /* Calendar: colored dot only — text too cramped at this width */
     .cal-label {
         font-size: 0;
-        padding: 3px;
+        width: 8px; height: 8px; min-width: 0;
+        padding: 0;
         border-radius: 50% !important;
-        min-width: 7px;
-        min-height: 7px;
-        max-width: 7px;
     }
     .cal-day { min-height: 44px; }
 
-    .modal-card { max-height: 95dvh; }
-    .sub-board-header-right .btn span { display: none; }
+    .modal-card { max-height: 94dvh; }
 }
 
 /* ==========================================================================

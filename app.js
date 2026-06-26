@@ -1890,45 +1890,52 @@ const renderSubCalendar = (projectId) => {
 const isMobile = () => window.innerWidth <= 768;
 
 const initializeSidebarToggle = () => {
-    const sidebar   = document.querySelector('.sidebar');
-    const toggleBtn = document.getElementById('sidebar-toggle-btn');
-    const showBtn   = document.getElementById('sidebar-show-btn');
-    const backdrop  = document.getElementById('sidebar-backdrop');
+    const sidebar       = document.querySelector('.sidebar');
+    const toggleBtn     = document.getElementById('sidebar-toggle-btn');
+    const showBtn       = document.getElementById('sidebar-show-btn');
+    const backdrop      = document.getElementById('sidebar-backdrop');
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileAddBtn  = document.getElementById('mobile-add-btn');
 
-    const collapse = () => {
+    // Mobile: body class drives the CSS drawer open/close
+    const mobileOpen  = () => document.body.classList.add('mob-sidebar-open');
+    const mobileClose = () => document.body.classList.remove('mob-sidebar-open');
+
+    // Desktop: width-transition collapse
+    const desktopCollapse = () => {
         sidebar.classList.add('collapsed');
-        if (backdrop) backdrop.classList.remove('visible');
-        if (!isMobile()) showBtn.classList.add('visible');
+        showBtn.classList.add('visible');
         localStorage.setItem('sidebar_collapsed', '1');
     };
-
-    const expand = () => {
+    const desktopExpand = () => {
         sidebar.classList.remove('collapsed');
-        if (isMobile() && backdrop) backdrop.classList.add('visible');
         showBtn.classList.remove('visible');
         localStorage.setItem('sidebar_collapsed', '0');
     };
 
-    toggleBtn.addEventListener('click', collapse);
-    showBtn.addEventListener('click', expand);
-    if (backdrop) backdrop.addEventListener('click', collapse);
+    toggleBtn.addEventListener('click', () => {
+        if (isMobile()) mobileClose(); else desktopCollapse();
+    });
+    showBtn.addEventListener('click', desktopExpand);
 
-    // On mobile: always start collapsed; on desktop: restore saved state
-    if (isMobile()) {
-        sidebar.classList.add('collapsed');
-    } else if (localStorage.getItem('sidebar_collapsed') === '1') {
-        collapse();
+    if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', mobileOpen);
+    if (backdrop)      backdrop.addEventListener('click', mobileClose);
+
+    // Mobile "+" proxies the main new-project button
+    if (mobileAddBtn) {
+        mobileAddBtn.addEventListener('click', () => {
+            document.getElementById('new-project-btn')?.click();
+        });
     }
 
-    // Re-evaluate on resize (e.g. rotating phone to landscape)
+    // Desktop: restore saved collapse state on load
+    if (!isMobile() && localStorage.getItem('sidebar_collapsed') === '1') {
+        desktopCollapse();
+    }
+
+    // Rotating to desktop closes mobile drawer
     window.addEventListener('resize', () => {
-        if (!isMobile()) {
-            if (backdrop) backdrop.classList.remove('visible');
-            showBtn.classList.toggle('visible', sidebar.classList.contains('collapsed'));
-        } else {
-            showBtn.classList.remove('visible'); // always shown via CSS on mobile
-            if (!sidebar.classList.contains('collapsed')) backdrop?.classList.add('visible');
-        }
+        if (!isMobile()) mobileClose();
     });
 };
 

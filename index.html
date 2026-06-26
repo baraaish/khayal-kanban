@@ -104,6 +104,30 @@
             </div>
         </aside>
 
+        <!-- Mobile Top Bar (hidden on desktop) -->
+        <header class="mobile-header" id="mobile-header">
+            <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open menu">
+                <i data-lucide="menu"></i>
+            </button>
+            <div class="mobile-logo-wrap">
+                <svg class="khayal-k" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="kgrad2" x1="0" y1="0" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+                            <stop offset="0%" stop-color="#c4b5fd"/>
+                            <stop offset="100%" stop-color="#7c3aed"/>
+                        </linearGradient>
+                    </defs>
+                    <rect x="2" y="2" width="5" height="18" rx="2.5" fill="url(#kgrad2)"/>
+                    <path d="M8 2 C8 2 20 9.5 20 9.5 C21.2 10.2 21.2 11 20 11.5 L8 11 Z" fill="url(#kgrad2)"/>
+                    <path d="M8 11 L20 11.5 C21.2 12 21.2 12.8 20 13.5 L8 20 Z" fill="url(#kgrad2)"/>
+                </svg>
+                <span class="mobile-logo-text">Khayal <span style="color:var(--accent-color-hover);font-style:italic;">AI</span></span>
+            </div>
+            <button class="btn btn-primary btn-small" id="mobile-add-btn" style="height:32px;padding:0 12px;">
+                <i data-lucide="plus"></i>
+            </button>
+        </header>
+
         <!-- Main Workspace -->
         <main class="main-content">
             <!-- Header Bar -->
