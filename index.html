@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>khayal AI // Enterprise Kanban Workspace</title>
+    <meta name="description" content="SaaS-grade Kanban Workspace for AI & Automation and B2B Lead Generation specialists.">
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- Lucide Icons CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/lucide/dist/umd/lucide.min.js"></script>
+</head>
+<body>
+    <!-- Background lighting effects - Khayal AI purple theme -->
+    <div class="ambient-glow bg-blob-1"></div>
+    <div class="ambient-glow bg-blob-2"></div>
+    <div class="ambient-glow bg-blob-3"></div>
+
+    <!-- Floating button to re-open sidebar when collapsed -->
+    <button class="sidebar-show-btn" id="sidebar-show-btn" title="Show Sidebar">
+        <i data-lucide="panel-left-open"></i>
+    </button>
+
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <button class="sidebar-toggle-btn" id="sidebar-toggle-btn" title="Hide Sidebar">
+                    <i data-lucide="panel-left-close"></i>
+                </button>
+                <div class="logo-icon" id="logo-icon-slot">
+                    <svg class="khayal-k" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="kgrad" x1="0" y1="0" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+                                <stop offset="0%" stop-color="#c4b5fd"/>
+                                <stop offset="100%" stop-color="#7c3aed"/>
+                            </linearGradient>
+                        </defs>
+                        <!-- Vertical bar -->
+                        <rect x="2" y="2" width="5" height="18" rx="2.5" fill="url(#kgrad)"/>
+                        <!-- Upper arm -->
+                        <path d="M8 2 C8 2 20 9.5 20 9.5 C21.2 10.2 21.2 11 20 11.5 L8 11 Z" fill="url(#kgrad)" rx="2"/>
+                        <!-- Lower arm -->
+                        <path d="M8 11 L20 11.5 C21.2 12 21.2 12.8 20 13.5 L8 20 Z" fill="url(#kgrad)"/>
+                        <!-- Sparkle -->
+                        <path d="M16 3.5 L16.7 5.3 L18.5 6 L16.7 6.7 L16 8.5 L15.3 6.7 L13.5 6 L15.3 5.3 Z" fill="#e9d5ff" opacity="0.95"/>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <span class="logo-title">Khayal <span class="logo-title-accent">AI</span></span>
+                    <span class="logo-subtitle">ENTERPRISE WORKSPACE</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" id="nav-kanban-board">
+                    <i data-lucide="kanban"></i>
+                    <span>Kanban Board</span>
+                </a>
+                <a href="#" class="nav-item" id="sidebar-stats-btn">
+                    <i data-lucide="bar-chart-2"></i>
+                    <span>Analytics</span>
+                </a>
+                <a href="#" class="nav-item" id="sidebar-settings-btn">
+                    <i data-lucide="settings"></i>
+                    <span>Configurations</span>
+                </a>
+            </nav>
+
+            <!-- Projects Navigation List -->
+            <div class="sidebar-projects-section">
+                <div class="sidebar-section-label">
+                    <i data-lucide="folder-open"></i>
+                    <span>Projects</span>
+                </div>
+                <div class="sidebar-projects-list" id="sidebar-projects-list">
+                    <!-- dynamically populated -->
+                </div>
+            </div>
+
+            <div class="sidebar-footer">
+                <a href="https://www.linkedin.com/in/baraa-shakarnah-8b4a07294/" target="_blank" rel="noopener noreferrer" class="developer-profile">
+                    <div class="profile-avatar-wrap">
+                        <img src="./profile.PNG" alt="Baraa Shakarnah" class="profile-avatar"
+                             onerror="this.style.display='none';document.getElementById('profile-fallback').style.display='flex'">
+                        <div class="profile-avatar-fallback" id="profile-fallback" style="display:none;">BS</div>
+                    </div>
+                    <div class="profile-meta">
+                        <span class="profile-author">Baraa Shakarnah</span>
+                        <span class="profile-role">AI & Automation Expert</span>
+                        <span class="profile-linkedin">
+                            <i data-lucide="linkedin"></i>
+                            linkedin.com/in/baraa
+                        </span>
+                    </div>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Workspace -->
+        <main class="main-content">
+            <!-- Header Bar -->
+            <header class="dashboard-header">
+                <div class="header-welcome">
+                    <h1>Kanban Board</h1>
+                    <p class="text-secondary">Track client outreach, pipeline conversions, and tech deployments.</p>
+                </div>
+                
+                <!-- Backup and Data Management Controls -->
+                <div class="backup-actions">
+                    <button id="export-backup-btn" class="btn btn-tertiary" title="Export board to JSON backup">
+                        <i data-lucide="download"></i>
+                        <span>Export Data</span>
+                    </button>
+                    <button id="import-backup-btn" class="btn btn-tertiary" title="Import board from JSON backup">
+                        <i data-lucide="upload"></i>
+                        <span>Import Data</span>
+                    </button>
+                    <!-- Hidden import input -->
+                    <input type="file" id="import-file-input" accept=".json" style="display: none;">
+                </div>
+            </header>
+
+            <!-- Search, Filter, and Column Action Row -->
+            <section class="controls-row">
+                <div class="search-and-filters">
+                    <!-- Search Input -->
+                    <div class="search-wrapper">
+                        <i data-lucide="search" class="search-icon"></i>
+                        <input type="text" id="search-input" placeholder="Search clients, actions, custom fields..." autocomplete="off">
+                        <button id="search-clear-btn" class="search-clear-btn" style="display: none;">
+                            <i data-lucide="x"></i>
+                        </button>
+                    </div>
+
+                    <!-- Tool Filter -->
+                    <div class="filter-wrapper">
+                        <i data-lucide="cpu" class="filter-icon"></i>
+                        <select id="tool-filter">
+                            <option value="">All Tools</option>
+                            <option value="n8n">n8n</option>
+                            <option value="ManyChat">ManyChat</option>
+                            <option value="SuiteDash">SuiteDash</option>
+                            <option value="HubSpot">HubSpot</option>
+                            <option value="OpenAI API">OpenAI API</option>
+                            <option value="Make.com">Make.com</option>
+                            <option value="Zapier">Zapier</option>
+                            <option value="Anthropic API">Anthropic API</option>
+                            <option value="Python">Python</option>
+                        </select>
+                    </div>
+
+                    <!-- Priority Filter -->
+                    <div class="filter-wrapper">
+                        <i data-lucide="sliders-horizontal" class="filter-icon"></i>
+                        <select id="priority-filter">
+                            <option value="">All Priorities</option>
+                            <option value="High">High Priority</option>
+                            <option value="Medium">Medium Priority</option>
+                            <option value="Low">Low Priority</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Main Trigger Buttons -->
+                <div class="main-actions">
+                    <button id="show-archived-btn" class="show-archived-toggle" title="Toggle archived projects">
+                        <i data-lucide="archive"></i>
+                        <span>Show Archived</span>
+                    </button>
+                    <button id="add-column-btn" class="btn btn-secondary">
+                        <i data-lucide="plus"></i>
+                        <span>Add Column</span>
+                    </button>
+                    <button id="add-card-btn" class="btn btn-primary">
+                        <i data-lucide="plus-circle"></i>
+                        <span>New Project</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Column Summary Bar -->
+            <section class="column-summary-container" id="column-summary-bar">
+                <!-- dynamically injected column summary tiles -->
+            </section>
+
+            <!-- KPI Metric Summary Bar -->
+            <section class="kpi-container">
+                <!-- KPI 1 -->
+                <div class="kpi-card" id="kpi-total">
+                    <div class="kpi-header-row">
+                        <span class="kpi-label">Total Projects</span>
+                        <div class="kpi-icon-container">
+                            <i data-lucide="folder-kanban" class="accent-text"></i>
+                        </div>
+                    </div>
+                    <span class="kpi-value" id="count-total">0</span>
+                    <div class="kpi-meta-text">Active database items</div>
+                </div>
+
+                <!-- KPI 2 -->
+                <div class="kpi-card" id="kpi-automations">
+                    <div class="kpi-header-row">
+                        <span class="kpi-label">Active Automations</span>
+                        <div class="kpi-icon-container">
+                            <i data-lucide="zap" class="accent-text"></i>
+                        </div>
+                    </div>
+                    <span class="kpi-value" id="count-automations">0</span>
+                    <div class="kpi-meta-text">Live workflow modules</div>
+                </div>
+
+                <!-- KPI 3 -->
+                <div class="kpi-card" id="kpi-outreach">
+                    <div class="kpi-header-row">
+                        <span class="kpi-label">Outreach & Leads</span>
+                        <div class="kpi-icon-container">
+                            <i data-lucide="mail-check" class="accent-text"></i>
+                        </div>
+                    </div>
+                    <span class="kpi-value" id="count-outreach">0</span>
+                    <div class="kpi-meta-text">Active pipeline stages</div>
+                </div>
+
+                <!-- KPI 4 -->
+                <div class="kpi-card" id="kpi-completed">
+                    <div class="kpi-header-row">
+                        <span class="kpi-label">Completed Builds</span>
+                        <div class="kpi-icon-container">
+                            <i data-lucide="check-square" class="accent-text"></i>
+                        </div>
+                    </div>
+                    <span class="kpi-value" id="count-completed">0</span>
+                    <div class="kpi-meta-text">Delivered automation integrations</div>
+                </div>
+            </section>
+
+            <!-- Kanban Board Dynamic Grid -->
+            <section class="kanban-board" id="board-canvas">
+                <!-- Columns dynamically injected here -->
+            </section>
+
+            <!-- Main Board Calendar -->
+            <section class="calendar-section" id="main-calendar-section">
+                <div class="calendar-top-row">
+                    <div class="calendar-section-title">
+                        <i data-lucide="calendar-days"></i>
+                        <span>Project Deadlines</span>
+                    </div>
+                    <div class="calendar-nav-controls">
+                        <button class="btn btn-secondary btn-small" id="main-cal-prev"><i data-lucide="chevron-left"></i></button>
+                        <span class="calendar-month-label" id="main-cal-label">—</span>
+                        <button class="btn btn-secondary btn-small" id="main-cal-next"><i data-lucide="chevron-right"></i></button>
+                    </div>
+                </div>
+                <div id="main-calendar-grid"></div>
+            </section>
+
+            <!-- Sub-board View (shown when a project is opened) -->
+            <section class="sub-board-view" id="sub-board-view" style="display:none;">
+                <div class="sub-board-header">
+                    <div class="sub-board-header-left">
+                        <button class="btn btn-secondary btn-small" id="sub-board-back-btn">
+                            <i data-lucide="arrow-left"></i> Main Board
+                        </button>
+                        <div class="sub-board-project-info">
+                            <h2 id="sub-board-project-title">Project</h2>
+                            <p id="sub-board-project-brief" class="text-secondary"></p>
+                        </div>
+                    </div>
+                    <div class="sub-board-header-right">
+                        <button id="show-archived-tasks-btn" class="show-archived-toggle" title="Toggle archived tasks">
+                            <i data-lucide="archive"></i>
+                            <span>Archived</span>
+                        </button>
+                        <button class="btn btn-secondary" id="sub-add-column-btn">
+                            <i data-lucide="plus"></i> Add Column
+                        </button>
+                        <button class="btn btn-primary" id="sub-add-task-btn">
+                            <i data-lucide="plus-circle"></i> New Task
+                        </button>
+                    </div>
+                </div>
+                <div class="kanban-board" id="sub-board-canvas"></div>
+
+                <!-- Sub-board Task Calendar -->
+                <section class="calendar-section sub-calendar" id="sub-calendar-section">
+                    <div class="calendar-top-row">
+                        <div class="calendar-section-title">
+                            <i data-lucide="calendar-check"></i>
+                            <span>Task Deadlines</span>
+                        </div>
+                        <div class="calendar-nav-controls">
+                            <button class="btn btn-secondary btn-small" id="sub-cal-prev"><i data-lucide="chevron-left"></i></button>
+                            <span class="calendar-month-label" id="sub-cal-label">—</span>
+                            <button class="btn btn-secondary btn-small" id="sub-cal-next"><i data-lucide="chevron-right"></i></button>
+                        </div>
+                    </div>
+                    <div id="sub-calendar-grid"></div>
+                </section>
+            </section>
+        </main>
+    </div>
+
+    <!-- Unified Card Modal (Add & Edit Card details) -->
+    <div class="modal-overlay" id="card-modal">
+        <div class="modal-card">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h3 id="modal-title">Configure Project</h3>
+                <button class="modal-close" id="modal-close-btn">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            
+            <!-- Modal Body (Form) -->
+            <form id="card-form" onsubmit="event.preventDefault();">
+                <input type="hidden" id="card-id">
+                <input type="hidden" id="card-column-id">
+
+                <!-- Client Name & Next Action Row -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="client-name">Client / Project Name <span class="required">*</span></label>
+                        <input type="text" id="client-name" placeholder="e.g. Acme Corp - Lead Intake System" required autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="next-action">Immediate Next Action <span class="required">*</span></label>
+                        <input type="text" id="next-action" placeholder="e.g. Test n8n webhook connection" required autocomplete="off">
+                    </div>
+                </div>
+
+                <!-- Status, Priority, Deadline and Automation Switch Row -->
+                <div class="form-row-4">
+                    <!-- Outreach Status -->
+                    <div class="form-group">
+                        <label for="outreach-status">Outreach Status</label>
+                        <select id="outreach-status">
+                            <option value="None">None</option>
+                            <option value="Email Sent">Email Sent</option>
+                            <option value="Waiting for Reply">Waiting for Reply</option>
+                            <option value="Meeting Booked">Meeting Booked</option>
+                            <option value="Follow-up Sent">Follow-up Sent</option>
+                        </select>
+                    </div>
+
+                    <!-- Priority -->
+                    <div class="form-group">
+                        <label for="card-priority">Priority</label>
+                        <select id="card-priority">
+                            <option value="Low">Low</option>
+                            <option value="Medium" selected>Medium</option>
+                            <option value="High">High</option>
+                        </select>
+                    </div>
+
+                    <!-- Deadline -->
+                    <div class="form-group">
+                        <label for="delivery-deadline">Deadline</label>
+                        <input type="date" id="delivery-deadline">
+                    </div>
+
+                    <!-- Automation Toggle -->
+                    <div class="form-group alignment-center">
+                        <label for="automation-live">Automation Live</label>
+                        <label class="switch-toggle">
+                            <input type="checkbox" id="automation-live">
+                            <span class="switch-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Tech Stack badges chips -->
+                <div class="form-group">
+                    <label>Tech Stack / Core Tools</label>
+                    <div class="tech-select-grid" id="tech-selector">
+                        <div class="tech-checkbox-chip" data-value="n8n">n8n</div>
+                        <div class="tech-checkbox-chip" data-value="ManyChat">ManyChat</div>
+                        <div class="tech-checkbox-chip" data-value="SuiteDash">SuiteDash</div>
+                        <div class="tech-checkbox-chip" data-value="HubSpot">HubSpot</div>
+                        <div class="tech-checkbox-chip" data-value="OpenAI API">OpenAI API</div>
+                        <div class="tech-checkbox-chip" data-value="Make.com">Make.com</div>
+                        <div class="tech-checkbox-chip" data-value="Zapier">Zapier</div>
+                        <div class="tech-checkbox-chip" data-value="Anthropic API">Anthropic API</div>
+                        <div class="tech-checkbox-chip" data-value="Python">Python</div>
+                        <!-- Add New Tool entry -->
+                        <div class="tech-checkbox-chip add-new-tool-chip" id="add-new-tool-chip">
+                            <i data-lucide="plus" style="width:10px;height:10px;margin-right:3px;display:inline-block;vertical-align:middle;"></i>Add New Tool
+                        </div>
+                        <div class="add-tool-inline" id="add-tool-inline" style="display:none;">
+                            <input type="text" id="new-tool-input" placeholder="Tool name..." autocomplete="off">
+                            <button type="button" class="btn btn-secondary btn-small" id="confirm-add-tool-btn">Add</button>
+                            <button type="button" class="btn btn-secondary btn-small" id="cancel-add-tool-btn">✕</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Checklist Manager System -->
+                <div class="form-group modal-sub-section">
+                    <div class="section-header-row">
+                        <label>Workflow Checklist / Sub-Tasks</label>
+                        <span class="checklist-progress-text" id="modal-checklist-percentage">0% Done</span>
+                    </div>
+                    
+                    <!-- Add Checklist Item -->
+                    <div class="checklist-adder-row">
+                        <input type="text" id="new-checklist-input" placeholder="Add checklist item..." autocomplete="off">
+                        <button type="button" class="btn btn-secondary btn-small" id="add-checklist-item-btn">Add Task</button>
+                    </div>
+                    
+                    <!-- Checklist Container -->
+                    <div class="checklist-items-container" id="modal-checklist-container">
+                        <!-- Dynamic list of checklist items -->
+                    </div>
+                </div>
+
+                <!-- Custom Fields Manager System -->
+                <div class="form-group modal-sub-section">
+                    <label>Custom Integration Parameters / Fields</label>
+                    
+                    <!-- Add Custom Field Inputs -->
+                    <div class="custom-field-adder-row">
+                        <input type="text" id="new-field-name-input" placeholder="Field Label (e.g. Webhook URL)" autocomplete="off">
+                        <input type="text" id="new-field-value-input" placeholder="Value (e.g. https://n8n.webhook...)" autocomplete="off">
+                        <button type="button" class="btn btn-secondary btn-small" id="add-custom-field-btn">Add Parameter</button>
+                    </div>
+                    
+                    <!-- Custom Fields Container -->
+                    <div class="custom-fields-container" id="modal-custom-fields-container">
+                        <!-- Dynamic list of custom fields -->
+                    </div>
+                </div>
+
+                <!-- Notes -->
+                <div class="form-group">
+                    <label for="project-notes">Scope Notes & Project Context</label>
+                    <textarea id="project-notes" rows="3" placeholder="Enter API endpoints, mapping notes, or credential info..."></textarea>
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="modal-footer">
+                    <div style="display:flex;gap:8px;">
+                        <button type="button" class="btn btn-danger" id="delete-card-btn" style="display: none;">
+                            <i data-lucide="trash-2"></i>
+                            <span>Delete</span>
+                        </button>
+                        <button type="button" class="btn btn-warning" id="archive-card-btn" style="display: none;">
+                            <i data-lucide="archive"></i>
+                            <span id="archive-card-label">Archive</span>
+                        </button>
+                    </div>
+                    <div class="modal-footer-actions">
+                        <button type="button" class="btn btn-secondary" id="modal-cancel-btn">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="save-card-btn">Save Project</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add/Edit Column Modal -->
+    <div class="modal-overlay" id="column-modal">
+        <div class="modal-card modal-card-small">
+            <div class="modal-header">
+                <h3 id="column-modal-title">Configure Column</h3>
+                <button class="modal-close" id="column-modal-close-btn">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            
+            <form id="column-form" onsubmit="event.preventDefault();">
+                <input type="hidden" id="column-id">
+                
+                <div class="form-group">
+                    <label for="column-name">Column Name <span class="required">*</span></label>
+                    <input type="text" id="column-name" placeholder="e.g. Client Review" required autocomplete="off">
+                </div>
+
+                <div class="form-group">
+                    <label for="column-classification">Workflow Behavior Class <span class="required">*</span></label>
+                    <select id="column-classification" required>
+                        <option value="pipeline">Pipeline / Outreach (Requires outreach & status labels)</option>
+                        <option value="technical">Technical / Development (Emphasizes custom parameters & tools)</option>
+                        <option value="qa">Quality Assurance / Testing (Presents checklists on cards)</option>
+                        <option value="archive">Archive / Completed (Safe state, completes tasks, dims card)</option>
+                    </select>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" id="delete-column-btn" style="display: none;">
+                        <i data-lucide="trash-2"></i>
+                        <span>Delete Column</span>
+                    </button>
+                    <div class="modal-footer-actions">
+                        <button type="button" class="btn btn-secondary" id="column-modal-cancel-btn">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="save-column-btn">Save Column</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- New Project Creation Modal -->
+    <div class="modal-overlay" id="new-project-modal">
+        <div class="modal-card modal-card-small">
+            <div class="modal-header">
+                <h3>Create New Project</h3>
+                <button class="modal-close" id="new-project-modal-close-btn"><i data-lucide="x"></i></button>
+            </div>
+            <form id="new-project-form" onsubmit="event.preventDefault();">
+                <div class="form-group">
+                    <label for="new-proj-title">Project Title <span class="required">*</span></label>
+                    <input type="text" id="new-proj-title" placeholder="e.g. Customer Portal Redesign" required autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label for="new-proj-brief">Brief Description</label>
+                    <textarea id="new-proj-brief" rows="2" placeholder="Short description of the project scope..."></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="new-proj-priority">Priority</label>
+                        <select id="new-proj-priority">
+                            <option value="Low">Low</option>
+                            <option value="Medium" selected>Medium</option>
+                            <option value="High">High</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-proj-deadline">Deadline</label>
+                        <input type="date" id="new-proj-deadline">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="new-proj-column">Add to Column</label>
+                    <select id="new-proj-column"></select>
+                </div>
+                <div class="modal-footer">
+                    <div></div>
+                    <div class="modal-footer-actions">
+                        <button type="button" class="btn btn-secondary" id="new-project-cancel-btn">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Create Project &amp; Open Board</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Task Modal (sub-board tasks) -->
+    <div class="modal-overlay" id="task-modal">
+        <div class="modal-card modal-card-small">
+            <div class="modal-header">
+                <h3 id="task-modal-title">New Task</h3>
+                <button class="modal-close" id="task-modal-close-btn"><i data-lucide="x"></i></button>
+            </div>
+            <form id="task-form" onsubmit="event.preventDefault();">
+                <input type="hidden" id="task-id">
+                <input type="hidden" id="task-project-id">
+                <div class="form-group">
+                    <label for="task-title-input">Task Title <span class="required">*</span></label>
+                    <input type="text" id="task-title-input" placeholder="e.g. Design database schema" required autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label for="task-description-input">Description</label>
+                    <textarea id="task-description-input" rows="2" placeholder="Task details..."></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="task-priority-input">Priority</label>
+                        <select id="task-priority-input">
+                            <option value="Low">Low</option>
+                            <option value="Medium" selected>Medium</option>
+                            <option value="High">High</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="task-deadline-input">Deadline</label>
+                        <input type="date" id="task-deadline-input">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="task-col-id-input">Column</label>
+                    <select id="task-col-id-input"></select>
+                </div>
+                <div class="modal-footer">
+                    <div style="display:flex;gap:8px;">
+                        <button type="button" class="btn btn-danger" id="delete-task-btn" style="display:none;">
+                            <i data-lucide="trash-2"></i> Delete
+                        </button>
+                        <button type="button" class="btn btn-warning" id="archive-task-btn" style="display:none;">
+                            <i data-lucide="archive"></i>
+                            <span id="archive-task-label">Archive</span>
+                        </button>
+                    </div>
+                    <div class="modal-footer-actions">
+                        <button type="button" class="btn btn-secondary" id="task-cancel-btn">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Task</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
