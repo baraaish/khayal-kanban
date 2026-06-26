@@ -321,6 +321,35 @@ button, input, select, textarea {
     color: var(--accent-color-hover);
 }
 
+/* Language toggle button */
+.lang-toggle-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px; height: 22px;
+    margin-top: 6px;
+    border: 1px solid rgba(124,58,237,0.35);
+    border-radius: 6px;
+    background: rgba(124,58,237,0.08);
+    color: var(--accent-color-hover);
+    font-family: 'Cairo', 'Outfit', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    letter-spacing: 0;
+    align-self: flex-start;
+}
+.lang-toggle-btn:hover {
+    background: rgba(124,58,237,0.18);
+    border-color: rgba(124,58,237,0.6);
+}
+.lang-toggle-mobile {
+    margin-top: 0;
+    width: 28px; height: 26px;
+    font-size: 11px;
+}
+
 .sidebar-footer {
     padding-top: 16px;
     border-top: 1px solid rgba(255, 255, 255, 0.03);
@@ -2170,6 +2199,90 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     .cal-day { min-height: 44px; }
 
     .modal-card { max-height: 94dvh; }
+}
+
+/* ==========================================================================
+   ARABIC FONT + RTL LAYOUT
+   ========================================================================== */
+
+/* Arabic body font */
+[dir="rtl"] body,
+[dir="rtl"] input,
+[dir="rtl"] textarea,
+[dir="rtl"] select,
+[dir="rtl"] button {
+    font-family: 'Cairo', sans-serif;
+}
+
+/* Keep branding in the Latin font */
+[dir="rtl"] .logo-title,
+[dir="rtl"] .logo-subtitle,
+[dir="rtl"] .mobile-logo-text,
+[dir="rtl"] .profile-author,
+[dir="rtl"] .kpi-value,
+[dir="rtl"] .tag-badge,
+[dir="rtl"] .tech-checkbox-chip {
+    font-family: 'Outfit', 'Cairo', sans-serif;
+}
+
+/* Text & flex direction flip */
+[dir="rtl"] .sidebar-logo       { flex-direction: row-reverse; }
+[dir="rtl"] .sidebar-section-label { flex-direction: row-reverse; }
+[dir="rtl"] .nav-item           { flex-direction: row-reverse; text-align: right; }
+[dir="rtl"] .developer-profile  { flex-direction: row-reverse; }
+[dir="rtl"] .profile-meta       { text-align: right; }
+[dir="rtl"] .dashboard-header   { flex-direction: row-reverse; }
+[dir="rtl"] .header-welcome     { text-align: right; }
+[dir="rtl"] .controls-row       { flex-direction: row-reverse; }
+[dir="rtl"] .search-and-filters { flex-direction: row-reverse; }
+[dir="rtl"] .main-actions       { flex-direction: row-reverse; }
+[dir="rtl"] .backup-actions     { flex-direction: row-reverse; }
+[dir="rtl"] .search-wrapper     { flex-direction: row-reverse; }
+[dir="rtl"] .search-icon        { margin-right: 0; margin-left: 8px; order: 2; }
+[dir="rtl"] .sub-board-header   { flex-direction: row-reverse; }
+[dir="rtl"] .sub-board-header-left  { flex-direction: row-reverse; }
+[dir="rtl"] .sub-board-header-right { flex-direction: row-reverse; }
+[dir="rtl"] .sub-board-project-info { text-align: right; }
+[dir="rtl"] .kanban-board       { flex-direction: row-reverse; }
+[dir="rtl"] .column-header      { flex-direction: row-reverse; }
+[dir="rtl"] .column-summary-container { flex-direction: row-reverse; }
+[dir="rtl"] .kpi-header-row     { flex-direction: row-reverse; }
+[dir="rtl"] .modal-header       { flex-direction: row-reverse; }
+[dir="rtl"] .modal-footer       { flex-direction: row-reverse; }
+[dir="rtl"] .modal-footer-actions { flex-direction: row-reverse; }
+[dir="rtl"] .form-group label   { text-align: right; }
+[dir="rtl"] .card-header        { flex-direction: row-reverse; }
+[dir="rtl"] .calendar-top-row   { flex-direction: row-reverse; }
+[dir="rtl"] .calendar-section-title { flex-direction: row-reverse; }
+[dir="rtl"] .kpi-meta-text      { text-align: right; }
+
+/* Sidebar border flips on desktop RTL */
+[dir="rtl"] .sidebar {
+    border-right: none;
+    border-left: 1px solid var(--border-color);
+}
+
+/* Mobile RTL: drawer slides from the RIGHT */
+@media (max-width: 768px) {
+    [dir="rtl"] .sidebar {
+        left: auto !important;
+        right: 0 !important;
+        transform: translateX(100%) !important;
+    }
+    [dir="rtl"] .sidebar.collapsed {
+        left: auto !important;
+        right: 0 !important;
+        transform: translateX(100%) !important;
+    }
+    [dir="rtl"] body.mob-sidebar-open .sidebar,
+    [dir="rtl"] body.mob-sidebar-open .sidebar.collapsed {
+        transform: translateX(0) !important;
+    }
+
+    /* Fix sidebar inner layout on mobile (no competing flex-grow) */
+    .sidebar-nav { flex-grow: 0; }
+    .sidebar-projects-section { flex-grow: 0; }
+    .sidebar-projects-list { overflow-y: visible; flex-grow: 0; }
 }
 
 /* ==========================================================================

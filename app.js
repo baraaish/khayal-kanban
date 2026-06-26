@@ -2,6 +2,179 @@
    AETHER FLOW KANBAN WORKSPACE LOGIC - ENTERPRISE GRADE
    ========================================================================== */
 
+// ============================================================
+// TRANSLATIONS (EN / AR)
+// ============================================================
+const TRANSLATIONS = {
+    en: {
+        'nav.kanban': 'Kanban Board', 'nav.analytics': 'Analytics',
+        'nav.settings': 'Configurations', 'nav.projects': 'Projects',
+        'header.title': 'Kanban Board',
+        'header.subtitle': 'Track client outreach, pipeline conversions, and tech deployments.',
+        'btn.export': 'Export Data', 'btn.import': 'Import Data',
+        'btn.show_archived': 'Show Archived', 'btn.add_column': 'Add Column',
+        'btn.new_project': 'New Project',
+        'search.placeholder': 'Search clients, actions, custom fields...',
+        'filter.all_tools': 'All Tools', 'filter.all_priorities': 'All Priorities',
+        'filter.high_priority': 'High Priority', 'filter.medium_priority': 'Medium Priority',
+        'filter.low_priority': 'Low Priority',
+        'priority.high': 'High', 'priority.medium': 'Medium', 'priority.low': 'Low',
+        'kpi.total': 'Total Projects', 'kpi.total_meta': 'Active database items',
+        'kpi.automations': 'Active Automations', 'kpi.automations_meta': 'Live workflow modules',
+        'kpi.outreach': 'Outreach & Leads', 'kpi.outreach_meta': 'Active pipeline stages',
+        'kpi.completed': 'Completed Builds', 'kpi.completed_meta': 'Delivered automation integrations',
+        'cal.project_deadlines': 'Project Deadlines', 'cal.task_deadlines': 'Task Deadlines',
+        'btn.show_archived_tasks': 'Archived', 'btn.add_column_sub': 'Add Column',
+        'btn.new_task': 'New Task', 'btn.back_main': 'Main Board',
+        'modal.configure_project': 'Configure Project',
+        'modal.new_project_create': 'Create New Project',
+        'modal.add_column': 'Add Column', 'modal.edit_column': 'Edit Column',
+        'modal.new_task': 'New Task', 'modal.edit_task': 'Edit Task',
+        'label.client_name': 'Client / Project Name', 'label.next_action': 'Immediate Next Action',
+        'label.outreach_status': 'Outreach Status', 'label.priority': 'Priority',
+        'label.deadline': 'Deadline', 'label.automation_live': 'Automation Live',
+        'label.tech_stack': 'Tech Stack / Core Tools',
+        'label.checklist': 'Workflow Checklist / Sub-Tasks',
+        'label.custom_fields': 'Custom Integration Parameters / Fields',
+        'label.notes': 'Scope Notes & Project Context',
+        'label.column_name': 'Column Name', 'label.workflow_class': 'Workflow Behavior Class',
+        'label.proj_title': 'Project Title', 'label.proj_brief': 'Brief Description',
+        'label.add_to_column': 'Add to Column',
+        'label.task_title': 'Task Title', 'label.task_desc': 'Description',
+        'label.task_priority': 'Priority', 'label.task_deadline': 'Deadline',
+        'label.task_column': 'Column',
+        'outreach.none': 'None', 'outreach.email_sent': 'Email Sent',
+        'outreach.waiting': 'Waiting for Reply', 'outreach.meeting': 'Meeting Booked',
+        'outreach.followup': 'Follow-up Sent',
+        'class.pipeline': 'Pipeline / Outreach', 'class.technical': 'Technical / Development',
+        'class.qa': 'Quality Assurance / Testing', 'class.archive': 'Archive / Completed',
+        'btn.save': 'Save Changes', 'btn.save_project': 'Save Project',
+        'btn.create_project': 'Create Project & Open Board',
+        'btn.save_task': 'Save Task', 'btn.save_column': 'Save Column',
+        'btn.delete': 'Delete', 'btn.delete_column': 'Delete Column',
+        'btn.archive': 'Archive', 'btn.unarchive': 'Unarchive', 'btn.cancel': 'Cancel',
+        'btn.add_checklist': 'Add Task', 'btn.add_field': 'Add Parameter',
+        'placeholder.client_name': 'e.g. Acme Corp - Lead Intake System',
+        'placeholder.next_action': 'e.g. Test n8n webhook connection',
+        'placeholder.notes': 'Enter API endpoints, mapping notes, or credential info...',
+        'placeholder.checklist': 'Add checklist item...',
+        'placeholder.field_name': 'Field Label (e.g. Webhook URL)',
+        'placeholder.field_value': 'Value',
+        'placeholder.column_name': 'e.g. Client Review',
+        'placeholder.proj_title': 'e.g. Customer Portal Redesign',
+        'placeholder.proj_brief': 'Short description of the project scope...',
+        'placeholder.task_title': 'e.g. Design database schema',
+        'placeholder.task_desc': 'Task details...',
+        'empty.no_projects': 'No projects yet', 'empty.no_tasks': 'No tasks',
+        'profile.role': 'AI & Automation Expert',
+        'months': ['January','February','March','April','May','June','July','August','September','October','November','December'],
+        'days': ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],
+    },
+    ar: {
+        'nav.kanban': 'لوحة كانبان', 'nav.analytics': 'التحليلات',
+        'nav.settings': 'الإعدادات', 'nav.projects': 'المشاريع',
+        'header.title': 'لوحة كانبان',
+        'header.subtitle': 'تتبّع تواصلك مع العملاء وتحويلات المبيعات والتشغيل التقني.',
+        'btn.export': 'تصدير البيانات', 'btn.import': 'استيراد البيانات',
+        'btn.show_archived': 'المؤرشفة', 'btn.add_column': 'إضافة عمود',
+        'btn.new_project': 'مشروع جديد',
+        'search.placeholder': 'البحث في العملاء والمهام والحقول...',
+        'filter.all_tools': 'كل الأدوات', 'filter.all_priorities': 'كل الأولويات',
+        'filter.high_priority': 'أولوية عالية', 'filter.medium_priority': 'أولوية متوسطة',
+        'filter.low_priority': 'أولوية منخفضة',
+        'priority.high': 'عالية', 'priority.medium': 'متوسطة', 'priority.low': 'منخفضة',
+        'kpi.total': 'إجمالي المشاريع', 'kpi.total_meta': 'عناصر قاعدة البيانات النشطة',
+        'kpi.automations': 'الأتمتة النشطة', 'kpi.automations_meta': 'وحدات سير العمل الحية',
+        'kpi.outreach': 'التواصل والعملاء المحتملون', 'kpi.outreach_meta': 'مراحل الاستهداف النشطة',
+        'kpi.completed': 'المشاريع المنجزة', 'kpi.completed_meta': 'تكاملات الأتمتة المسلّمة',
+        'cal.project_deadlines': 'مواعيد تسليم المشاريع', 'cal.task_deadlines': 'مواعيد تسليم المهام',
+        'btn.show_archived_tasks': 'المؤرشفة', 'btn.add_column_sub': 'إضافة عمود',
+        'btn.new_task': 'مهمة جديدة', 'btn.back_main': 'اللوحة الرئيسية',
+        'modal.configure_project': 'إعداد المشروع',
+        'modal.new_project_create': 'إنشاء مشروع جديد',
+        'modal.add_column': 'إضافة عمود', 'modal.edit_column': 'تعديل العمود',
+        'modal.new_task': 'مهمة جديدة', 'modal.edit_task': 'تعديل المهمة',
+        'label.client_name': 'اسم العميل / المشروع', 'label.next_action': 'الإجراء المطلوب فوراً',
+        'label.outreach_status': 'حالة التواصل', 'label.priority': 'الأولوية',
+        'label.deadline': 'تاريخ التسليم', 'label.automation_live': 'الأتمتة مفعّلة',
+        'label.tech_stack': 'الأدوات والتقنيات المستخدمة',
+        'label.checklist': 'قائمة المهام الفرعية',
+        'label.custom_fields': 'حقول ومعاملات التكامل',
+        'label.notes': 'ملاحظات النطاق وسياق المشروع',
+        'label.column_name': 'اسم العمود', 'label.workflow_class': 'نوع سلوك سير العمل',
+        'label.proj_title': 'عنوان المشروع', 'label.proj_brief': 'وصف مختصر',
+        'label.add_to_column': 'إضافة إلى العمود',
+        'label.task_title': 'عنوان المهمة', 'label.task_desc': 'الوصف',
+        'label.task_priority': 'الأولوية', 'label.task_deadline': 'تاريخ التسليم',
+        'label.task_column': 'العمود',
+        'outreach.none': 'لا شيء', 'outreach.email_sent': 'تم إرسال البريد',
+        'outreach.waiting': 'في انتظار الرد', 'outreach.meeting': 'اجتماع محجوز',
+        'outreach.followup': 'تم إرسال المتابعة',
+        'class.pipeline': 'مبيعات / تواصل', 'class.technical': 'تقني / تطوير',
+        'class.qa': 'ضمان الجودة / اختبار', 'class.archive': 'أرشيف / منجز',
+        'btn.save': 'حفظ التغييرات', 'btn.save_project': 'حفظ المشروع',
+        'btn.create_project': 'إنشاء المشروع وفتح اللوحة',
+        'btn.save_task': 'حفظ المهمة', 'btn.save_column': 'حفظ العمود',
+        'btn.delete': 'حذف', 'btn.delete_column': 'حذف العمود',
+        'btn.archive': 'أرشفة', 'btn.unarchive': 'إلغاء الأرشفة', 'btn.cancel': 'إلغاء',
+        'btn.add_checklist': 'إضافة مهمة', 'btn.add_field': 'إضافة معامل',
+        'placeholder.client_name': 'مثال: شركة أكمي - نظام استقبال العملاء',
+        'placeholder.next_action': 'مثال: اختبار اتصال n8n webhook',
+        'placeholder.notes': 'أدخل نقاط API أو ملاحظات التعيين...',
+        'placeholder.checklist': 'أضف عنصراً في القائمة...',
+        'placeholder.field_name': 'اسم الحقل (مثال: Webhook URL)',
+        'placeholder.field_value': 'القيمة',
+        'placeholder.column_name': 'مثال: مراجعة العميل',
+        'placeholder.proj_title': 'مثال: إعادة تصميم بوابة العملاء',
+        'placeholder.proj_brief': 'وصف مختصر لنطاق المشروع...',
+        'placeholder.task_title': 'مثال: تصميم مخطط قاعدة البيانات',
+        'placeholder.task_desc': 'تفاصيل المهمة...',
+        'empty.no_projects': 'لا توجد مشاريع بعد', 'empty.no_tasks': 'لا توجد مهام',
+        'profile.role': 'خبير ذكاء اصطناعي وأتمتة',
+        'months': ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'],
+        'days': ['أحد','إثن','ثلث','أرب','خمس','جمع','سبت'],
+    }
+};
+
+let currentLang = localStorage.getItem('khayal_lang') || 'en';
+const t = key => {
+    const d = TRANSLATIONS[currentLang] || TRANSLATIONS.en;
+    return d[key] !== undefined ? d[key] : (TRANSLATIONS.en[key] || key);
+};
+
+const applyTranslations = () => {
+    const isAr = currentLang === 'ar';
+    document.documentElement.lang = currentLang;
+    document.documentElement.dir = isAr ? 'rtl' : 'ltr';
+
+    // Update all [data-i18n] text nodes
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const val = t(el.dataset.i18n);
+        if (typeof val === 'string') el.textContent = val;
+    });
+    // Update all [data-i18n-ph] placeholders
+    document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+        el.placeholder = t(el.dataset.i18nPh);
+    });
+    // Language toggle buttons
+    document.querySelectorAll('.lang-toggle-btn').forEach(btn => {
+        btn.textContent = isAr ? 'EN' : 'ع';
+        btn.title = isAr ? 'Switch to English' : 'التبديل للعربية';
+    });
+    // Update MONTH_NAMES / DAY_NAMES used by calendar renderer
+    MONTH_NAMES.splice(0, 12, ...t('months'));
+    DAY_NAMES.splice(0, 7,  ...t('days'));
+    // Re-render everything
+    renderBoard();
+    calculateKPIs();
+    renderMainCalendar();
+    const subView = document.getElementById('sub-board-view');
+    if (subView && subView.style.display !== 'none' && currentView !== 'main') {
+        renderSubBoard(currentView);
+        renderSubCalendar(currentView);
+    }
+};
+
 // --- GLOBAL APP STATES ---
 let projects = [];
 let columns = [];
@@ -418,7 +591,7 @@ const createCardDOM = (project, columnClassification) => {
 
     // Apply priority color label tag
     const priorityClass = `tag-${project.priority.toLowerCase()}`;
-    const priorityTagHTML = `<span class="card-priority-tag ${priorityClass}">${project.priority}</span>`;
+    const priorityTagHTML = `<span class="card-priority-tag ${priorityClass}">${t('priority.' + project.priority.toLowerCase())}</span>`;
 
     // Render Tech tags
     const tagsHTML = project.techStack.map(tool => 
@@ -1455,7 +1628,7 @@ const renderSidebarProjects = () => {
     container.innerHTML = '';
 
     if (projects.length === 0) {
-        container.innerHTML = `<div style="font-size:10px;color:var(--text-muted);padding:6px 12px;">No projects yet</div>`;
+        container.innerHTML = `<div style="font-size:10px;color:var(--text-muted);padding:6px 12px;">${t('empty.no_projects')}</div>`;
         return;
     }
 
@@ -1537,7 +1710,7 @@ const renderSubBoard = (projectId) => {
         if (colTasks.length > 0) {
             colTasks.forEach(task => body.appendChild(createTaskCardDOM(task, col.classification, projectId)));
         } else {
-            body.innerHTML = `<div class="empty-placeholder"><i data-lucide="folder-open"></i><span>No tasks</span></div>`;
+            body.innerHTML = `<div class="empty-placeholder"><i data-lucide="folder-open"></i><span>${t('empty.no_tasks')}</span></div>`;
         }
         canvas.appendChild(colEl);
     });
@@ -1796,8 +1969,8 @@ const initializeNewProjectModalListeners = () => {
 };
 
 // --- CALENDAR RENDERING ---
-const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-const DAY_NAMES   = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+let MONTH_NAMES = [...TRANSLATIONS.en.months];
+let DAY_NAMES   = [...TRANSLATIONS.en.days];
 
 const renderCalendarGrid = (gridId, items, year, month) => {
     const grid = document.getElementById(gridId);
@@ -1924,7 +2097,7 @@ const initializeSidebarToggle = () => {
     // Mobile "+" proxies the main new-project button
     if (mobileAddBtn) {
         mobileAddBtn.addEventListener('click', () => {
-            document.getElementById('new-project-btn')?.click();
+            document.getElementById('add-card-btn')?.click();
         });
     }
 
@@ -1946,6 +2119,8 @@ document.addEventListener('DOMContentLoaded', () => {
     renderBoard();
     renderColumnSummary();
     renderSidebarProjects();
+    // Apply saved language on startup (after DOM is ready)
+    if (currentLang === 'ar') applyTranslations();
 
     initializeControls();
     initializeColumnModalListeners();
@@ -2022,4 +2197,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const projId = document.getElementById('sub-board-view').getAttribute('data-project-id');
         if (projId) renderSubCalendar(projId);
     });
+
+    // Language toggle (sidebar + mobile header)
+    const toggleLang = () => {
+        currentLang = currentLang === 'en' ? 'ar' : 'en';
+        localStorage.setItem('khayal_lang', currentLang);
+        applyTranslations();
+        lucide.createIcons();
+    };
+    document.getElementById('lang-toggle-btn')?.addEventListener('click', toggleLang);
+    document.getElementById('lang-toggle-btn-mob')?.addEventListener('click', toggleLang);
 });
