@@ -1887,30 +1887,49 @@ const renderSubCalendar = (projectId) => {
 };
 
 // --- SIDEBAR COLLAPSE TOGGLE ---
+const isMobile = () => window.innerWidth <= 768;
+
 const initializeSidebarToggle = () => {
-    const sidebar = document.querySelector('.sidebar');
+    const sidebar   = document.querySelector('.sidebar');
     const toggleBtn = document.getElementById('sidebar-toggle-btn');
-    const showBtn = document.getElementById('sidebar-show-btn');
+    const showBtn   = document.getElementById('sidebar-show-btn');
+    const backdrop  = document.getElementById('sidebar-backdrop');
 
     const collapse = () => {
         sidebar.classList.add('collapsed');
-        showBtn.classList.add('visible');
+        if (backdrop) backdrop.classList.remove('visible');
+        if (!isMobile()) showBtn.classList.add('visible');
         localStorage.setItem('sidebar_collapsed', '1');
-        lucide.createIcons();
     };
 
     const expand = () => {
         sidebar.classList.remove('collapsed');
+        if (isMobile() && backdrop) backdrop.classList.add('visible');
         showBtn.classList.remove('visible');
         localStorage.setItem('sidebar_collapsed', '0');
-        lucide.createIcons();
     };
 
     toggleBtn.addEventListener('click', collapse);
     showBtn.addEventListener('click', expand);
+    if (backdrop) backdrop.addEventListener('click', collapse);
 
-    // Restore saved state
-    if (localStorage.getItem('sidebar_collapsed') === '1') collapse();
+    // On mobile: always start collapsed; on desktop: restore saved state
+    if (isMobile()) {
+        sidebar.classList.add('collapsed');
+    } else if (localStorage.getItem('sidebar_collapsed') === '1') {
+        collapse();
+    }
+
+    // Re-evaluate on resize (e.g. rotating phone to landscape)
+    window.addEventListener('resize', () => {
+        if (!isMobile()) {
+            if (backdrop) backdrop.classList.remove('visible');
+            showBtn.classList.toggle('visible', sidebar.classList.contains('collapsed'));
+        } else {
+            showBtn.classList.remove('visible'); // always shown via CSS on mobile
+            if (!sidebar.classList.contains('collapsed')) backdrop?.classList.add('visible');
+        }
+    });
 };
 
 // --- INITIALIZE APPLICATION ENGINE ---
